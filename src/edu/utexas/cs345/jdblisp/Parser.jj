@@ -44,7 +44,9 @@ TOKEN : /* SQL Stuff */
 |   < ALL:      "all" >
 |   < AST:      "*" >
 |   < FROM:     "from" >
-|   < DISTINCT: "distinct">
+|   < DISTINCT: "distinct" >
+|   < WHERE:    "not" >
+|   < NOT:      "where" >
 }
 
 SKIP : /* WHITE SPACE */
@@ -138,6 +140,7 @@ SQLmod sql_modify():
 
 /**
  * sql_select -> 
+ * TODO: WHERE isnt able to work yet
  */ 
 SQLsel sql_select():
 { Token t; Seq cols; Token table; List tables; SQLCond condition; }
@@ -161,12 +164,12 @@ SQLsel sql_select():
 }
 
 /**
- * sql_condition -> 
+ * sql_condition -> logical_term {or logical_term}* | not logical_term {or logical_term}*
  */
 SQLcon sql_condition():
-{}
+{ SQLlt lt;}
 {
-    
+    //TODO how do you implement this one?..., should we have some substitution possible with lisp
 }
 
 /**
