@@ -5,7 +5,7 @@ public class SQL {
 	
 public static String SQLQuery(String query) {
 		String username = "root";
-		String password = "rascoot29";
+		String password = "r00tmysql";
 		String tablename = "example";
 		String fieldname = "*";
 		//String query = "SELECT " + fieldname + " FROM " + tablename + " WHERE name = 'scooby doo';";
