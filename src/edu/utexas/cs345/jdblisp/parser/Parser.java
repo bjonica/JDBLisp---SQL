@@ -10,7 +10,7 @@ public class Parser implements ParserConstants {
 /**
  * sql_cmd -> sql_define | sql_control | sql_modify
  */
-  static final public SQLcmd sql_cmd() throws ParseException {
+  static final public SExp sql_cmd() throws ParseException {
   SExp s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ALTER:
@@ -42,7 +42,7 @@ public class Parser implements ParserConstants {
 /**
  * sql_define -> alter | comment | create | drop | rename | analyze | explain
  */
-  static final public SQLdef sql_define() throws ParseException {
+  static final public SExp sql_define() throws ParseException {
   Symbol s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ALTER:
@@ -79,7 +79,7 @@ public class Parser implements ParserConstants {
 /**
  * sql_create -> database | table
  */
-  static final public SQLcreate sql_create() throws ParseException {
+  static final public Symbol sql_create() throws ParseException {
   Token t; List colList;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DATABASE:
@@ -106,10 +106,10 @@ public class Parser implements ParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-/**
+/**SExp
  * sql_control -> audit | noaudit | grant | revoke | set role
  */
-  static final public SQLctr sql_control() throws ParseException {
+  static final public SExp sql_control() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case AUDIT:
       jj_consume_token(AUDIT);
@@ -137,7 +137,7 @@ public class Parser implements ParserConstants {
 /**
  * sql_modify -> select | insert | update | delete | truncate | transaction | set transaction | lock
  */
-  static final public SQLmod sql_modify() throws ParseException {
+  static final public SExp sql_modify() throws ParseException {
   Symbol s;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SELECT:
@@ -177,15 +177,16 @@ public class Parser implements ParserConstants {
 
 /**
  * sql_select -> 
+ * TODO: WHERE isnt able to work yet
  */
-  static final public SQLsel sql_select() throws ParseException {
-  Token t; Seq cols; Token table; List tables; SQLCond condition;
+  static final public Symbol sql_select() throws ParseException {
+   Token table; List tables; SExp condition;
     if (jj_2_5(3)) {
       jj_consume_token(ALL);
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                            {if (true) return SQLQuery("SELECT ALL * FROM " + table.image);}
+                                                          {if (true) return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
     } else if (jj_2_6(3)) {
       jj_consume_token(ALL);
       jj_consume_token(AST);
@@ -197,7 +198,7 @@ public class Parser implements ParserConstants {
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                                 {if (true) return SQLQuery("SELECT DISTINCT * FROM " + table.image);}
+                                                                 {if (true) return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
     } else if (jj_2_8(3)) {
       jj_consume_token(DISTINCT);
       jj_consume_token(AST);
@@ -208,7 +209,7 @@ public class Parser implements ParserConstants {
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                    {if (true) return SQLQuery("SELECT * FROM " + table.image);}
+                                                    {if (true) return SQLQuery("SELECT * FROM " + new Symbol(table.image));}
     } else if (jj_2_10(3)) {
       jj_consume_token(AST);
       jj_consume_token(FROM);
@@ -222,8 +223,13 @@ public class Parser implements ParserConstants {
   }
 
 /**
- * sql_condition -> 
+ * sql_condition -> logical_term {or logical_term}* | not logical_term {or logical_term}*
  */
+/*SExp sql_condition():
+{ Symbol t;}//this doesn't do anything, filler.
+{
+    //TODO how do you implement this one?..., should we have some substitution possible with lisp
+}*/
 
 /**
  * SExp -> Symbol | Str | Num | List | SQL_CMD
@@ -451,32 +457,6 @@ public class Parser implements ParserConstants {
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_3R_6() {
-    if (jj_scan_token(SET)) return true;
-    if (jj_scan_token(TRANSACTION)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_8() {
-    if (jj_scan_token(NIL)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_3() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_7()) {
-    jj_scanpos = xsp;
-    if (jj_3R_8()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_7() {
-    if (jj_scan_token(LPAREN)) return true;
-    return false;
-  }
-
   static private boolean jj_3_2() {
     if (jj_3R_2()) return true;
     return false;
@@ -546,19 +526,6 @@ public class Parser implements ParserConstants {
     return false;
   }
 
-  static private boolean jj_3_4() {
-    if (jj_scan_token(TABLE)) return true;
-    if (jj_scan_token(SYMB)) return true;
-    if (jj_3R_3()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_3() {
-    if (jj_scan_token(TABLE)) return true;
-    if (jj_scan_token(SYMB)) return true;
-    return false;
-  }
-
   static private boolean jj_3_10() {
     if (jj_scan_token(AST)) return true;
     if (jj_scan_token(FROM)) return true;
@@ -573,10 +540,23 @@ public class Parser implements ParserConstants {
     return false;
   }
 
+  static private boolean jj_3_4() {
+    if (jj_scan_token(TABLE)) return true;
+    if (jj_scan_token(SYMB)) return true;
+    if (jj_3R_3()) return true;
+    return false;
+  }
+
   static private boolean jj_3_8() {
     if (jj_scan_token(DISTINCT)) return true;
     if (jj_scan_token(AST)) return true;
     if (jj_scan_token(FROM)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_3() {
+    if (jj_scan_token(TABLE)) return true;
+    if (jj_scan_token(SYMB)) return true;
     return false;
   }
 
@@ -587,10 +567,30 @@ public class Parser implements ParserConstants {
     return false;
   }
 
+  static private boolean jj_3R_8() {
+    if (jj_scan_token(NIL)) return true;
+    return false;
+  }
+
   static private boolean jj_3_6() {
     if (jj_scan_token(ALL)) return true;
     if (jj_scan_token(AST)) return true;
     if (jj_scan_token(FROM)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_3() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_7()) {
+    jj_scanpos = xsp;
+    if (jj_3R_8()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_7() {
+    if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
@@ -623,6 +623,12 @@ public class Parser implements ParserConstants {
     return false;
   }
 
+  static private boolean jj_3R_6() {
+    if (jj_scan_token(SET)) return true;
+    if (jj_scan_token(TRANSACTION)) return true;
+    return false;
+  }
+
   static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
   static public ParserTokenManager token_source;
@@ -646,7 +652,7 @@ public class Parser implements ParserConstants {
       jj_la1_0 = new int[] {0xfe,0xfe,0x200000,0x1f00,0x1fd000,0x1fdffe,0x0,0x1fdffe,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x3fa,0xa,0x3fa,0x240,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0xfe8,0x28,0xfe8,0x900,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[10];
   static private boolean jj_rescan = false;
@@ -853,7 +859,7 @@ public class Parser implements ParserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[42];
+    boolean[] la1tokens = new boolean[44];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -870,7 +876,7 @@ public class Parser implements ParserConstants {
         }
       }
     }
-    for (int i = 0; i < 42; i++) {
+    for (int i = 0; i < 44; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

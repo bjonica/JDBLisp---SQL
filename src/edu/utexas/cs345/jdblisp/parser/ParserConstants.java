@@ -63,23 +63,27 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int DISTINCT = 26;
   /** RegularExpression Id. */
-  int LPAREN = 33;
+  int WHERE = 27;
   /** RegularExpression Id. */
-  int RPAREN = 34;
+  int NOT = 28;
   /** RegularExpression Id. */
-  int NIL = 35;
+  int LPAREN = 35;
   /** RegularExpression Id. */
-  int QUOTE = 36;
+  int RPAREN = 36;
   /** RegularExpression Id. */
-  int FUNCTION = 37;
+  int NIL = 37;
   /** RegularExpression Id. */
-  int KEYWORD = 38;
+  int QUOTE = 38;
   /** RegularExpression Id. */
-  int NUMB = 39;
+  int FUNCTION = 39;
   /** RegularExpression Id. */
-  int STRG = 40;
+  int KEYWORD = 40;
   /** RegularExpression Id. */
-  int SYMB = 41;
+  int NUMB = 41;
+  /** RegularExpression Id. */
+  int STRG = 42;
+  /** RegularExpression Id. */
+  int SYMB = 43;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -113,12 +117,14 @@ public interface ParserConstants {
     "\"*\"",
     "\"from\"",
     "\"distinct\"",
+    "\"where\"",
+    "\"not\"",
     "\" \"",
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
     "\"\\n\\r\"",
-    "<token of kind 32>",
+    "<token of kind 34>",
     "\"(\"",
     "\")\"",
     "<NIL>",

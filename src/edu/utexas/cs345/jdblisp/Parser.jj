@@ -45,8 +45,8 @@ TOKEN : /* SQL Stuff */
 |   < AST:      "*" >
 |   < FROM:     "from" >
 |   < DISTINCT: "distinct" >
-|   < WHERE:    "not" >
-|   < NOT:      "where" >
+|   < WHERE:    "where" >
+|   < NOT:      "not" >
 }
 
 SKIP : /* WHITE SPACE */
@@ -78,7 +78,7 @@ TOKEN : /* LITERALS & SYMBOLS */
 /**
  * sql_cmd -> sql_define | sql_control | sql_modify
  */
-SQLcmd sql_cmd():
+SExp sql_cmd():
 { SExp s; }
 {   s = sql_define() { return s; }
   |LOOKAHEAD(2) s = sql_control() { return s; }
@@ -88,7 +88,7 @@ SQLcmd sql_cmd():
 /**
  * sql_define -> alter | comment | create | drop | rename | analyze | explain
  */
-SQLdef sql_define():
+SExp sql_define():
 { Symbol s; }
 {  < ALTER >
  | < COMMENT > 
@@ -102,7 +102,7 @@ SQLdef sql_define():
 /**
  * sql_create -> database | table
  */
-SQLcreate sql_create():
+Symbol sql_create():
 { Token t; List colList; }
 {
     < DATABASE > t = <SYMB> { return SQLQuery("CREATE DATABASE " + new Symbol(t.image)); }
@@ -110,10 +110,10 @@ SQLcreate sql_create():
   | LOOKAHEAD(3) < TABLE > t = <SYMB> colList = list() { return SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList)); }
 }
 
-/**
+/**SExp
  * sql_control -> audit | noaudit | grant | revoke | set role
  */
-SQLctr sql_control():
+SExp sql_control():
 {}
 {
     < AUDIT >
@@ -126,7 +126,7 @@ SQLctr sql_control():
 /**
  * sql_modify -> select | insert | update | delete | truncate | transaction | set transaction | lock
  */
-SQLmod sql_modify():
+SExp sql_modify():
 { Symbol s; }
 {   < SELECT > s = sql_select() { return s; }
   | < INSERT >
@@ -142,35 +142,35 @@ SQLmod sql_modify():
  * sql_select -> 
  * TODO: WHERE isnt able to work yet
  */ 
-SQLsel sql_select():
-{ Token t; Seq cols; Token table; List tables; SQLCond condition; }
-{   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
+Symbol sql_select():
+{  Token table; List tables; SExp condition; }
+{   //LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + new (table.image) + " WHERE " + condition.toString());}
+  LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
 
-  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  //| LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
 
-  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  //| LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
 
-  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+ // | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
 
-  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  //| LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQLQuery("SELECT * FROM " + new Symbol(table.image));}
   
-  | LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  //| LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQLQuery("SELECT * FROM " + listToSQL(tables));}
 }
 
 /**
  * sql_condition -> logical_term {or logical_term}* | not logical_term {or logical_term}*
  */
-SQLcon sql_condition():
-{ SQLlt lt;}
+/*SExp sql_condition():
+{ Symbol t;}//this doesn't do anything, filler.
 {
     //TODO how do you implement this one?..., should we have some substitution possible with lisp
-}
+}*/
 
 /**
  * SExp -> Symbol | Str | Num | List | SQL_CMD
