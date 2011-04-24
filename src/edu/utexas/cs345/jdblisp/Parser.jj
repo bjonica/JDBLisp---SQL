@@ -41,6 +41,10 @@ TOKEN : /* SQL Stuff */
 
 |   < DATABASE: "database" >
 |   < TABLE:    "table" >
+|   < ALL:      "all" >
+|   < AST:      "*" >
+|   < FROM:     "from" >
+|   < DISTINCT: "distinct">
 }
 
 SKIP : /* WHITE SPACE */
@@ -59,7 +63,6 @@ TOKEN : /* PUNCTUATION */
 |   < QUOTE:  "'" >
 |   < FUNCTION:  "#'" >
 |   < KEYWORD: ":" >
-|   < COMMA: ([","])? >
 
 }
 
@@ -100,9 +103,9 @@ SQLdef sql_define():
 SQLcreate sql_create():
 { Token t; List colList; }
 {
-    < DATABASE > t = <STRG> { return SQLQuery("CREATE DATABASE " + new Str(t.image)); }
-  | LOOKAHEAD(3) < TABLE > t = <STRG> { return SQLQuery("CREATE TABLE " + new Str(t.image));}
-  | LOOKAHEAD(3) < TABLE > t = <STRG> colList = list() { return SQLQuery("CREATE TABLE " + new Str(t.image) + listToSQL(colList)); }
+    < DATABASE > t = <SYMB> { return SQLQuery("CREATE DATABASE " + new Symbol(t.image)); }
+  | LOOKAHEAD(3) < TABLE > t = <SYMB> { return SQLQuery("CREATE TABLE " + new Symbol(t.image));}
+  | LOOKAHEAD(3) < TABLE > t = <SYMB> colList = list() { return SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList)); }
 }
 
 /**
@@ -122,8 +125,8 @@ SQLctr sql_control():
  * sql_modify -> select | insert | update | delete | truncate | transaction | set transaction | lock
  */
 SQLmod sql_modify():
-{}
-{   < SELECT >
+{ Symbol s; }
+{   < SELECT > s = sql_select() { return s; }
   | < INSERT >
   | < UPDATE >
   | < DELETE >
@@ -132,6 +135,23 @@ SQLmod sql_modify():
   | < SET > < TRANSACTION >
   | < LOCK >
 }
+
+/**
+ * sql_select -> 
+ */
+SQLsel sql_select():
+{ Token t; Seq cols; Token table; List tables; SQLCond condition; }
+{   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + table.image);}
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT DISTINCT * FROM " + table.image);}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQLQuery("SELECT * FROM " + table.image);}
+  | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQLQuery("SELECT * FROM " + listToSQL(tables));}
+}
+
+/**
+ * sql_condition -> 
+ */
 
 /**
  * SExp -> Symbol | Str | Num | List | SQL_CMD

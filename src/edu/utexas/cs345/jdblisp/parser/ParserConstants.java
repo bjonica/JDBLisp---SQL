@@ -55,25 +55,31 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int TABLE = 22;
   /** RegularExpression Id. */
-  int LPAREN = 29;
+  int ALL = 23;
   /** RegularExpression Id. */
-  int RPAREN = 30;
+  int AST = 24;
   /** RegularExpression Id. */
-  int NIL = 31;
+  int FROM = 25;
   /** RegularExpression Id. */
-  int QUOTE = 32;
+  int DISTINCT = 26;
   /** RegularExpression Id. */
-  int FUNCTION = 33;
+  int LPAREN = 33;
   /** RegularExpression Id. */
-  int KEYWORD = 34;
+  int RPAREN = 34;
   /** RegularExpression Id. */
-  int COMMA = 35;
+  int NIL = 35;
   /** RegularExpression Id. */
-  int NUMB = 36;
+  int QUOTE = 36;
   /** RegularExpression Id. */
-  int STRG = 37;
+  int FUNCTION = 37;
   /** RegularExpression Id. */
-  int SYMB = 38;
+  int KEYWORD = 38;
+  /** RegularExpression Id. */
+  int NUMB = 39;
+  /** RegularExpression Id. */
+  int STRG = 40;
+  /** RegularExpression Id. */
+  int SYMB = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -103,19 +109,22 @@ public interface ParserConstants {
     "\"lock\"",
     "\"database\"",
     "\"table\"",
+    "\"all\"",
+    "\"*\"",
+    "\"from\"",
+    "\"distinct\"",
     "\" \"",
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
     "\"\\n\\r\"",
-    "<token of kind 28>",
+    "<token of kind 32>",
     "\"(\"",
     "\")\"",
     "<NIL>",
     "\"\\\'\"",
     "\"#\\\'\"",
     "\":\"",
-    "<COMMA>",
     "<NUMB>",
     "<STRG>",
     "<SYMB>",
