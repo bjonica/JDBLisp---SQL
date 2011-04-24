@@ -44,7 +44,9 @@ TOKEN : /* SQL Stuff */
 |   < ALL:      "all" >
 |   < AST:      "*" >
 |   < FROM:     "from" >
-|   < DISTINCT: "distinct">
+|   < DISTINCT: "distinct" >
+|   < WHERE:    "not" >
+|   < NOT:      "where" >
 }
 
 SKIP : /* WHITE SPACE */
@@ -138,20 +140,37 @@ SQLmod sql_modify():
 
 /**
  * sql_select -> 
- */
+ * TODO: WHERE isnt able to work yet
+ */ 
 SQLsel sql_select():
 { Token t; Seq cols; Token table; List tables; SQLCond condition; }
-{   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + table.image);}
+{   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
+
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
-  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT DISTINCT * FROM " + table.image);}
+
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
+
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
-  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQLQuery("SELECT * FROM " + table.image);}
+
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQLQuery("SELECT * FROM " + new Symbol(table.image));}
+  
+  | LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
   | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQLQuery("SELECT * FROM " + listToSQL(tables));}
 }
 
 /**
- * sql_condition -> 
+ * sql_condition -> logical_term {or logical_term}* | not logical_term {or logical_term}*
  */
+SQLcon sql_condition():
+{ SQLlt lt;}
+{
+    //TODO how do you implement this one?..., should we have some substitution possible with lisp
+}
 
 /**
  * SExp -> Symbol | Str | Num | List | SQL_CMD
