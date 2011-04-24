@@ -102,7 +102,7 @@ SExp sql_define():
 /**
  * sql_create -> database | table
  */
-Symbol sql_create():
+String sql_create():
 { Token t; List colList; }
 {
     < DATABASE > t = <SYMB> { return SQL.SQLQuery("CREATE DATABASE " + new Symbol(t.image)); }
@@ -142,8 +142,26 @@ SExp sql_modify():
  * sql_select -> 
  * TODO: WHERE isnt able to work yet
  */ 
-Symbol sql_select():
+String sql_select():
 {  Token table; List tables; SExp condition; }
+<<<<<<< HEAD
+{   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT ALL * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
+
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
+
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
+
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQL.SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
+
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image));}
+  
+  | LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+=======
 {   //LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT ALL * FROM " + new (table.image) + " WHERE " + condition.toString());}
   LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
 
@@ -160,23 +178,24 @@ Symbol sql_select():
   | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image));}
   
   //| LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+>>>>>>> d9450477492da82fd70debbff004f684324b3739
   | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables));}
 }
 
 /**
  * sql_condition -> logical_term {or logical_term}* | not logical_term {or logical_term}*
  */
-/*SExp sql_condition():
-{ Symbol t;}//this doesn't do anything, filler.
+SExp sql_condition():
+{ SExp t;}//this doesn't do anything, filler.
 {
-    //TODO how do you implement this one?..., should we have some substitution possible with lisp
-}*/
+    t = sexp() {return t;}//TODO how do you implement this one?..., should we have some substitution possible with lisp
+}
 
 /**
  * SExp -> Symbol | Str | Num | List | SQL_CMD
  */
 SExp sexp():
-{	SExp s = null; Token t;
+{	SExp s = null; Token t; SQLExp q = null;
 }
 {     s = symbol() { return s; }
     | t = <STRG> { return new Str(t.image); }
@@ -214,6 +233,6 @@ Symbol symbol():
 { Token t;
 }
 {   t = <SYMB> { return new Symbol(t.image.toUpperCase()); }
-   | <KEYWORD> t = <SYMB> { return new Keyword(t.image.toUpperCase()); }
+  | <KEYWORD> t = <SYMB> { return new Keyword(t.image.toUpperCase()); }
 }
 
