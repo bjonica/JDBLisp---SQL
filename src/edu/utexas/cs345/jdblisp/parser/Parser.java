@@ -85,19 +85,19 @@ public class Parser implements ParserConstants {
     case DATABASE:
       jj_consume_token(DATABASE);
       t = jj_consume_token(SYMB);
-                              {if (true) return SQLQuery("CREATE DATABASE " + new Symbol(t.image));}
+                              {if (true) return SQL.SQLQuery("CREATE DATABASE " + new Symbol(t.image));}
       break;
     default:
       jj_la1[2] = jj_gen;
       if (jj_2_3(3)) {
         jj_consume_token(TABLE);
         t = jj_consume_token(SYMB);
-                                        {if (true) return SQLQuery("CREATE TABLE " + new Symbol(t.image));}
+                                        {if (true) return SQL.SQLQuery("CREATE TABLE " + new Symbol(t.image));}
       } else if (jj_2_4(3)) {
         jj_consume_token(TABLE);
         t = jj_consume_token(SYMB);
         colList = list();
-                                                         {if (true) return SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList));}
+                                                         {if (true) return SQL.SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList));}
       } else {
         jj_consume_token(-1);
         throw new ParseException();
@@ -186,35 +186,35 @@ public class Parser implements ParserConstants {
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                          {if (true) return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
+                                                          {if (true) return SQL.SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
     } else if (jj_2_6(3)) {
       jj_consume_token(ALL);
       jj_consume_token(AST);
       jj_consume_token(FROM);
       tables = list();
-                                                           {if (true) return SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
+                                                           {if (true) return SQL.SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
     } else if (jj_2_7(3)) {
       jj_consume_token(DISTINCT);
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                                 {if (true) return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
+                                                                 {if (true) return SQL.SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
     } else if (jj_2_8(3)) {
       jj_consume_token(DISTINCT);
       jj_consume_token(AST);
       jj_consume_token(FROM);
       tables = list();
-                                                                {if (true) return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
+                                                                {if (true) return SQL.SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
     } else if (jj_2_9(3)) {
       jj_consume_token(AST);
       jj_consume_token(FROM);
       table = jj_consume_token(SYMB);
-                                                    {if (true) return SQLQuery("SELECT * FROM " + new Symbol(table.image));}
+                                                    {if (true) return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image));}
     } else if (jj_2_10(3)) {
       jj_consume_token(AST);
       jj_consume_token(FROM);
       tables = list();
-                                                   {if (true) return SQLQuery("SELECT * FROM " + listToSQL(tables));}
+                                                   {if (true) return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables));}
     } else {
       jj_consume_token(-1);
       throw new ParseException();

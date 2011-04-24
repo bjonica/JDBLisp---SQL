@@ -105,9 +105,9 @@ SExp sql_define():
 Symbol sql_create():
 { Token t; List colList; }
 {
-    < DATABASE > t = <SYMB> { return SQLQuery("CREATE DATABASE " + new Symbol(t.image)); }
-  | LOOKAHEAD(3) < TABLE > t = <SYMB> { return SQLQuery("CREATE TABLE " + new Symbol(t.image));}
-  | LOOKAHEAD(3) < TABLE > t = <SYMB> colList = list() { return SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList)); }
+    < DATABASE > t = <SYMB> { return SQL.SQLQuery("CREATE DATABASE " + new Symbol(t.image)); }
+  | LOOKAHEAD(3) < TABLE > t = <SYMB> { return SQL.SQLQuery("CREATE TABLE " + new Symbol(t.image));}
+  | LOOKAHEAD(3) < TABLE > t = <SYMB> colList = list() { return SQL.SQLQuery("CREATE TABLE " + new Symbol(t.image) + listToSQL(colList)); }
 }
 
 /**SExp
@@ -144,23 +144,23 @@ SExp sql_modify():
  */ 
 Symbol sql_select():
 {  Token table; List tables; SExp condition; }
-{   //LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + new (table.image) + " WHERE " + condition.toString());}
-  LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
+{   //LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT ALL * FROM " + new (table.image) + " WHERE " + condition.toString());}
+  LOOKAHEAD(3)< ALL > < AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT ALL * FROM " + new Symbol(table.image));}
 
-  //| LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
+  //| LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT ALL * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< ALL > < AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT ALL * FROM " + listToSQL(tables));}
 
-  //| LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
+  //| LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT DISTINCT * FROM " + new Symbol(table.image)) ;}
 
- // | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
+ // | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() < WHERE > condition = sql_condition(){ return SQL.SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< DISTINCT > < AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT DISTINCT * FROM " + listToSQL(tables));}
 
-  //| LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQLQuery("SELECT * FROM " + new Symbol(table.image));}
+  //| LOOKAHEAD(3)< AST > < FROM > table = < SYMB > < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< AST > < FROM > table = < SYMB > { return SQL.SQLQuery("SELECT * FROM " + new Symbol(table.image));}
   
-  //| LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
-  | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQLQuery("SELECT * FROM " + listToSQL(tables));}
+  //| LOOKAHEAD(3)< AST > < FROM > tables = list() < WHERE > condition = sql_condition() { return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables) + " WHERE " + condition.toString());}
+  | LOOKAHEAD(3)< AST > < FROM > tables = list() { return SQL.SQLQuery("SELECT * FROM " + listToSQL(tables));}
 }
 
 /**

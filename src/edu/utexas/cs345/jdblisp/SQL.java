@@ -1,3 +1,4 @@
+package edu.utexas.cs345.jdblisp;
 import java.io.WriteAbortedException;
 import java.io.Writer;
 import java.sql.*;
@@ -17,7 +18,7 @@ public class SQL {
 	    return result;
 	}
 
-	public static String SQLQuery(String query){
+	public static Str SQLQuery(String query){
 		String result = "";
 		Connection con = connect();
 		try{
