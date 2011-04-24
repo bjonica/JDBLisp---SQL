@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="ClosureSymbolTable.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041064870000000" remote="129042181190000000" />
+<file name="Cons.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129035572960000000" remote="129042181190000000" />
+<file name="differences-from-cl.txt" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129034069400000000" remote="129042181190000000" />
+<file name="FormEntry.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129040715580000000" remote="129042181190000000" />
+<file name="FormHelpTopic.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129032841560000000" remote="129042181190000000" />
+<file name="FunctionEntry.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041038060000000" remote="129042181200000000" />
+<file name="HelpTopic.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129035548380000000" remote="129042181200000000" />
+<file name="InvalidArgumentQuantityException.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041038220000000" remote="129042181200000000" />
+<file name="Keyword.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129034199080000000" remote="129042181200000000" />
+<file name="Lambda.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041056310000000" remote="129042181200000000" />
+<file name="LispException.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129031844630000000" remote="129042181200000000" />
+<file name="LISPRuntime.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129091717664843750" remote="129092774160000000" />
+<file name="List.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041060580000000" remote="129042181210000000" />
+<file name="Num.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041083310000000" remote="129042181210000000" />
+<file name="Parser.jj" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041067020000000" remote="129042181210000000" />
+<file name="Seq.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129092732102968750" remote="129092774170000000" />
+<file name="SExp.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129040694610000000" remote="129042181210000000" />
+<file name="SpecialFormEntry.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129092737821562500" remote="129092774180000000" />
+<file name="Str.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129032035370000000" remote="129042181230000000" />
+<file name="Symbol.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129035506260000000" remote="129042181230000000" />
+<file name="SymbolTable.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041060070000000" remote="129042181230000000" />
+<file name="SymbolTableEntry.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129040715160000000" remote="129042181230000000" />
+<file name="TypeException.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129032012580000000" remote="129042181230000000" />
+<file name="TypeUtil.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129041035620000000" remote="129042181230000000" />
+<file name="UndefinedFunctionException.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129035509280000000" remote="129042181230000000" />
+<file name="UndefinedVariableException.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129035508280000000" remote="129042181240000000" />
+<file name="VariableEntry.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129040715310000000" remote="129042181240000000" />
+<file name="Car.java" server="shadowfax.cs.utexas.edu//u/www/users/cannata/cs345/" local="129092730225781250" remote="129092774160000000" />
+</dwsync>

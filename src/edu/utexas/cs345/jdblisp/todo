@@ -1,0 +1,57 @@
+Outstanding
+-----------
+   
+    - Implement FORMAT
+    - Implement FIRST
+    - Implement LIST*
+    - Implement macros
+    - Implement packages
+    - Implement READ and PRINT
+    - Implement SETF
+    - Redefine DEFUN as a macro
+    - Help for property list
+    - Help for keyword
+    - Help for symbol
+    - Help for sexp
+    - Help for number
+    - Help for string
+
+
+( ( (lambda (X)
+      ((lambda (procedure)
+         (funcall X (lambda (arg) ((funcall procedure procedure) arg))))
+       (lambda (procedure)
+         (funcall X (lambda (arg) ((funcall procedure procedure) arg))) ) ) )
+    (lambda (func-arg)
+      (lambda (n)
+        (if (= 0 n)
+            1
+            (* n (funcall func-arg (- n 1)))))) ) 5)
+
+Partially Done
+--------------
+
+
+Done
+----
+
+    D null? symbol? number? list? atom?
+    D Implement Cadr
+    D Implement equals   
+    D Implement last
+    D Implement lambdas
+    D Implement keywords
+    D Implement GETF
+    D Add ' notation for quote
+    D Define NIL
+    D Define T
+    D Implement DEFPARAMETER
+    D Implement DEFVAR
+    D Implement IF
+    D Implement LET   
+    D Implement LET*
+                      (let ( (first (lambda (List) (car List))) ) (funcall first (list 11 2 3 4)))
+                      (let* ( (first (lambda (List) (car List))) ) (funcall first (list 11 2 3 4)))
+    D Implement LIST
+    D Implement PROGN
+    D Implement QUOTE

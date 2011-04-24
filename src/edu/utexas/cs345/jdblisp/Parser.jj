@@ -1,0 +1,180 @@
+/**
+ * Grammar and parser definition for JDB-Lisp
+ */
+ 
+options {
+  JDK_VERSION = "1.5";
+}
+PARSER_BEGIN(Parser)
+package edu.utexas.cs345.jdblisp.parser;
+
+import edu.utexas.cs345.jdblisp.*;
+public class Parser {
+
+    private static Symbol QUOTE_SYMB = new Symbol("QUOTE");
+    private static Symbol FUNCTION_SYMB = new Symbol("FUNCTION");
+}
+
+PARSER_END(Parser)
+
+TOKEN : /* SQL Stuff */
+{   < ALTER:    "alter" >
+|   < COMMENT:  "comment" >
+|   < CREATE:   "create" >
+|   < DROP:     "drop" >
+|   < RENAME:   "rename" >
+|   < ANALYZE:  "analyze" >
+|   < EXPLAIN:  "explain" >
+|   < AUDIT:    "audit" >
+|   < NOAUDIT:  "noaudit" >
+|   < GRANT:    "grant" >
+|   < REVOKE:   "revoke" >
+|   < SET:      "set" >
+|   < ROLE:     "role" >
+|   < SELECT:   "select" >
+|   < UPDATE:   "update" >
+|   < DELETE:   "delete" >
+|   < INSERT:   "insert" >
+|   < TRUNCATE: "truncate" >
+|   < TRANSACTION:"transaction" >
+|   < LOCK:     "lock" >
+
+|   < DATABASE: "database" >
+|   < TABLE:    "table" >
+}
+
+SKIP : /* WHITE SPACE */
+{ 	" "
+|	"\r"
+|	"\t"
+|	"\n"
+|   "\n\r"
+|   < ";" (~["\n", "\r"])* ("\n"|"\r")>
+}
+
+TOKEN : /* PUNCTUATION */
+{	< LPAREN: "(" >
+|	< RPAREN: ")" >
+|   < NIL:    (["N","n"]["I","i"]["L","l"])>
+|   < QUOTE:  "'" >
+|   < FUNCTION:  "#'" >
+|   < KEYWORD: ":" >
+|   < COMMA: ([","])? >
+
+}
+
+TOKEN : /* LITERALS & SYMBOLS */
+{   < NUMB: (["+", "-"])? (["0"-"9"])+ ("." (["0"-"9"])+ )? >
+|   < STRG: "\"" (~["\""])* "\"" >
+|	< SYMB: (["A"-"Z", "a"-"z", "_", "+", "-", "*", "/", "=", ">", "<"])+
+            (["A"-"Z", "a"-"z", "0"-"9",
+                "_", "+", "-", "*", "/", "=", ">", "<", "?"])* >
+}
+/**
+ * sql_cmd -> sql_define | sql_control | sql_modify
+ */
+SQLcmd sql_cmd():
+{ SExp s; }
+{   s = sql_define() { return s; }
+  |LOOKAHEAD(2) s = sql_control() { return s; }
+  |LOOKAHEAD(2) s = sql_modify() { return s; }
+}
+
+/**
+ * sql_define -> alter | comment | create | drop | rename | analyze | explain
+ */
+SQLdef sql_define():
+{ Symbol s; }
+{  < ALTER >
+ | < COMMENT > 
+ | < CREATE > s = sql_create() {return s;}
+ | < DROP >
+ | < RENAME >
+ | < ANALYZE >
+ | < EXPLAIN >
+}
+
+/**
+ * sql_create -> database | table
+ */
+SQLcreate sql_create():
+{ Token t; List colList; }
+{
+    < DATABASE > t = <STRG> { return SQLQuery("CREATE DATABASE " + new Str(t.image)); }
+  | LOOKAHEAD(3) < TABLE > t = <STRG> { return SQLQuery("CREATE TABLE " + new Str(t.image));}
+  | LOOKAHEAD(3) < TABLE > t = <STRG> colList = list() { return SQLQuery("CREATE TABLE " + new Str(t.image) + listToSQL(colList)); }
+}
+
+/**
+ * sql_control -> audit | noaudit | grant | revoke | set role
+ */
+SQLctr sql_control():
+{}
+{
+    < AUDIT >
+  | < NOAUDIT >
+  | < GRANT >
+  | < REVOKE >
+  | < SET > < ROLE >
+}
+
+/**
+ * sql_modify -> select | insert | update | delete | truncate | transaction | set transaction | lock
+ */
+SQLmod sql_modify():
+{}
+{   < SELECT >
+  | < INSERT >
+  | < UPDATE >
+  | < DELETE >
+  | < TRUNCATE >
+  | < TRANSACTION >
+  | < SET > < TRANSACTION >
+  | < LOCK >
+}
+
+/**
+ * SExp -> Symbol | Str | Num | List | SQL_CMD
+ */
+SExp sexp():
+{	SExp s = null; Token t;
+}
+{     s = symbol() { return s; }
+    | t = <STRG> { return new Str(t.image); }
+    | t = <NUMB> { return new Num(t.image); }
+    | t = <QUOTE> s = sexp() { return new List(new Seq(QUOTE_SYMB, s)); }
+    | t = <FUNCTION> s = sexp() { return new List(new Seq(FUNCTION_SYMB, s)); }
+    | s = list() { return s; }
+    | s = sql_cmd() { return s; }
+}
+
+/**
+ * List -> "(" Seq ")"
+ */
+List list(): 
+{	Seq s;
+}
+{     <LPAREN>  s = seq() <RPAREN> { return new List(s); }    
+    | <NIL>  { return new List(null); }  // allow NIL to be shorthand for ()
+}
+
+/**
+ * Seq -> null | SExp Seq
+ */
+Seq seq():
+{	Seq sq; SExp se;
+}
+{   [ se = sexp() sq = seq() { return new Seq(se, sq); } ]
+    { return null; }
+}
+
+/**
+ * Symbol -> Symbol | Keyword Symbol
+ */
+Symbol symbol():
+{ Token t;
+}
+{   t = <SYMB> { return new Symbol(t.image.toUpperCase()); }
+   | <KEYWORD> t = <SYMB> { return new Keyword(t.image.toUpperCase()); }
+}
+

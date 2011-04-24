@@ -1,0 +1,88 @@
+> (let ((z 3) (a 5) (x (lambda (x y) (- x (+ y z))))) (let ((z 19) (a 5)) (funcall x z a)))
+ABSTRACT SYNTAX:
+  List: 
+    Seq: 
+      Symbol: LET
+    Seq: 
+      List: 
+        Seq: 
+          List: 
+            Seq: 
+              Symbol: Z
+            Seq: 
+              Num: 3
+        Seq: 
+          List: 
+            Seq: 
+              Symbol: A
+            Seq: 
+              Num: 5
+        Seq: 
+          List: 
+            Seq: 
+              Symbol: X
+            Seq: 
+              List: 
+                Seq: 
+                  Symbol: LAMBDA
+                Seq: 
+                  List: 
+                    Seq: 
+                      Symbol: X
+                    Seq: 
+                      Symbol: Y
+                Seq: 
+                  List: 
+                    Seq: 
+                      Symbol: -
+                    Seq: 
+                      Symbol: X
+                    Seq: 
+                      List: 
+                        Seq: 
+                          Symbol: +
+                        Seq: 
+                          Symbol: Y
+                        Seq: 
+                          Symbol: Z
+    Seq: 
+      List: 
+        Seq: 
+          Symbol: LET
+        Seq: 
+          List: 
+            Seq: 
+              List: 
+                Seq: 
+                  Symbol: Z
+                Seq: 
+                  Num: 19
+            Seq: 
+              List: 
+                Seq: 
+                  Symbol: A
+                Seq: 
+                  Num: 5
+        Seq: 
+          List: 
+            Seq: 
+              Symbol: FUNCALL
+            Seq: 
+              Symbol: X
+            Seq: 
+              Symbol: Z
+            Seq: 
+              Symbol: A
+
+----------------
+-5
+
+
+Welcome to DrScheme, version 4.2.1 [3m].
+Language: Pretty Big; memory limit: 128 megabytes.
+> (let ((z 3) (a 5) (x (lambda (x y) (- x (+ y z))))) (let ((z 19) (a 5)) (x z a)))
+. . reference to undefined identifier: z
+> (let ((z 17)) (let ((z 3) (a 5) (x (lambda (x y) (- x (+ y z))))) (let ((z 19) (a 5)) (x z a)))) 
+-3
+> 
+

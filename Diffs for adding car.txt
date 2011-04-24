@@ -1,0 +1,104 @@
+$ for i in *java; do echo "'********************'  $i  '********************'"; diff $i /cygdrive/c/tmp/jdb-lisp; done
+'********************'  Car.java  '********************'
+diff: /cygdrive/c/tmp/jdb-lisp/Car.java: No such file or directory
+package edu.utexas.cs345.jdblisp;
+
+/**
+ * Car
+ * @author Jonathan Bernard (jdbernard@gmail.com)
+ */
+public class Car {
+
+    public final SExp sexp;
+
+    public Car(SExp e) {
+        sexp = e;
+    }
+
+    public String display(String offset) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(offset);
+        sb.append("SExp: \n");
+        
+        sb.append(sexp.display(offset + "  "));
+
+        if (sexp != null) sb.append(sexp.display(offset));
+
+        return sb.toString();
+    }
+
+    public String toString() {
+	   return sexp.toString();
+    }
+}
+
+'********************'  ClosureSymbolTable.java  '********************'
+'********************'  Cons.java  '********************'
+'********************'  FormEntry.java  '********************'
+'********************'  FormHelpTopic.java  '********************'
+'********************'  FunctionEntry.java  '********************'
+'********************'  HelpTopic.java  '********************'
+'********************'  InvalidArgumentQuantityException.java  '********************'
+'********************'  Keyword.java  '********************'
+'********************'  LISPRuntime.java  '********************'
+28c28
+<     boolean dumpAST = true;
+---
+>     boolean dumpAST = false;
+'********************'  Lambda.java  '********************'
+'********************'  LispException.java  '********************'
+'********************'  List.java  '********************'
+'********************'  Num.java  '********************'
+'********************'  SExp.java  '********************'
+'********************'  Seq.java  '********************'
+22c22
+<
+---
+>
+'********************'  SpecialFormEntry.java  '********************'
+553,569d552
+<         final SpecialFormEntry CAR = new SpecialFormEntry(
+<             SpecialFormEntry.CAR, environment,
+<             new FormHelpTopic("CAR", "get first element of a list",
+<                 "(car <List>) => <SExp>",
+<                 "Creates a new Sexp whose value is the same as the first element of <List> ",
+<                 "List", "a list",
+<                 "car", "an sexp"))
+<         {
+<             public SExp call(SymbolTable symbolTable, Seq arguments)
+<             throws LispException {
+<
+<                 SExp object;
+<                               List list = null;
+<                 Car car;
+<
+<                 if (arguments == null)
+<                     throw new InvalidArgumentQuantityException(toString(), 1);
+571,583c554
+<                 // get the object
+<                 object = arguments.car.eval(symbolTable);
+<                 if(object instanceof List) {
+<                                  list = (List)object;
+<                                  car = new Car(list.seq.car);
+<                                  //return list.seq.car;
+<                                  return car.sexp;
+<                               }
+<
+<                 // TODO: else throw error
+<                               return null;
+<             }
+<         };
+---
+>         // TODO
+1613d1583
+<         environment.globalSymbolTable.bind(CAR.symbol, CAR);
+'********************'  Str.java  '********************'
+'********************'  Symbol.java  '********************'
+'********************'  SymbolTable.java  '********************'
+'********************'  SymbolTableEntry.java  '********************'
+'********************'  TypeException.java  '********************'
+'********************'  TypeUtil.java  '********************'
+'********************'  UndefinedFunctionException.java  '********************'
+'********************'  UndefinedVariableException.java  '********************'
+'********************'  VariableEntry.java  '********************'
